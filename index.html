@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Kamera sayısı, çözünürlük, codec ve disk kapasitesine göre tahmini CCTV kayıt süresini hesaplayın.">
+  <title>CCTV Kayıt Süresi Hesaplayıcı</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07111f;--panel:#0d1b2d;--panel2:#10233a;--line:#213750;--text:#edf5ff;--muted:#a9bdd2;--accent:#39d6c2;--blue:#65aaff;--warning:#ffcc75;--shadow:0 22px 60px #02081188}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#153c5b 0,transparent 38%),linear-gradient(145deg,#07111f,#091725 55%,#07111f);color:var(--text);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+    .wrap{width:min(1120px,calc(100% - 36px));margin:0 auto;padding:38px 0 28px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:36px}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:.02em}.brand-icon{width:39px;height:39px;border:1px solid #2f7085;border-radius:12px;display:grid;place-items:center;background:#0d2938;color:var(--accent);font-size:21px}.tag{border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:12px;padding:6px 11px}
+    .hero{max-width:780px;margin-bottom:28px}.eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.12;letter-spacing:-.04em;margin:9px 0 12px}.hero p{color:var(--muted);font-size:16px;margin:0;max-width:700px}.layout{display:grid;grid-template-columns:1.08fr .92fr;gap:20px;align-items:start}.card{background:linear-gradient(160deg,#0f2033f5,#0b1929f5);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}.card-head{padding:21px 23px 14px;border-bottom:1px solid #1b3047}.card-head h2{font-size:17px;margin:0 0 4px}.card-head p{margin:0;color:var(--muted);font-size:13px}.form{padding:20px 23px 23px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{margin-bottom:15px}.field label,.field .label{display:block;color:#d7e5f4;font-size:13px;font-weight:650;margin-bottom:7px}.hint{color:#8fa8c1;font-size:11px;display:block;margin-top:5px}input,select{width:100%;min-height:43px;border:1px solid #2c435a;border-radius:9px;background:#091625;color:var(--text);padding:10px 12px;font:inherit;outline:none}input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #39d6c21c}input[type=number]{appearance:textfield}input::-webkit-inner-spin-button,input::-webkit-outer-spin-button{appearance:none;margin:0}.field small{color:var(--muted)}.divider{height:1px;background:#1b3047;margin:4px 0 17px}.checkline{display:flex;align-items:center;gap:9px;color:#d7e5f4;font-size:13px;cursor:pointer}.checkline input{accent-color:var(--accent);width:16px;height:16px;min-height:auto;margin:0}.inline-extra{display:none;margin-top:12px}.inline-extra.show{display:block}.results{padding:21px 22px 22px}.metric-primary{padding:18px;border:1px solid #286c73;background:linear-gradient(130deg,#103d47,#102d3b);border-radius:14px;margin-bottom:13px}.metric-primary .caption,.metric .caption{color:#a9c5d8;font-size:12px}.big{display:flex;align-items:baseline;gap:8px;margin-top:3px}.big strong{font-size:38px;letter-spacing:-.04em;line-height:1.15}.big span{font-size:15px;color:#c4d7e8}.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.metric{background:#0a1725;border:1px solid #1c334a;border-radius:12px;padding:14px}.metric strong{display:block;font-size:20px;margin-top:3px;letter-spacing:-.02em}.target{margin-top:14px;padding:16px;border:1px solid #1c334a;border-radius:13px;background:#0a1725}.target-row{display:grid;grid-template-columns:1fr 140px;align-items:center;gap:15px}.target h3{font-size:14px;margin:0}.target p{color:var(--muted);font-size:12px;margin:3px 0 0}.target-out{font-weight:750;color:var(--accent);font-size:22px;white-space:nowrap}.note{color:#92a9bf;font-size:11px;margin:14px 2px 0}.details{margin-top:20px;padding:18px 21px;border:1px solid var(--line);border-radius:15px;background:#091625aa;color:var(--muted);font-size:12px}.details h3{color:#e8f2fc;font-size:13px;margin:0 0 6px}.details p{margin:6px 0}.foot{display:flex;justify-content:space-between;gap:12px;align-items:center;color:#8199af;font-size:11px;margin:19px 2px 0}.foot a{color:#9ecfff;text-decoration:none}.foot a:hover{text-decoration:underline}.error{color:#ff9b9b;font-size:12px;min-height:18px;margin-top:7px}
+    @media(max-width:800px){.layout{grid-template-columns:1fr}.top{margin-bottom:28px}.wrap{padding-top:25px}.results{padding:18px}}
+    @media(max-width:480px){.wrap{width:calc(100% - 24px)}.field-grid{grid-template-columns:1fr;gap:0}.card-head,.form{padding-left:16px;padding-right:16px}.results{padding:15px}.metric-primary{padding:15px}.big strong{font-size:34px}.target-row{grid-template-columns:1fr 115px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <div class="brand"><span class="brand-icon" aria-hidden="true">◉</span><span>CAMERA STORAGE TOOL</span></div>
+      <span class="tag">Ücretsiz · Tarayıcıda çalışır</span>
+    </header>
+    <section class="hero">
+      <div class="eyebrow">Güvenlik sistemi planlama aracı</div>
+      <h1>CCTV Kayıt Süresi<br>Hesaplayıcı</h1>
+      <p>Kamera ayarlarını ve disk kapasitesini girin; tahmini kayıt gününü ve hedef süre için gereken disk alanını anında görün.</p>
+    </section>
+    <section class="layout" aria-label="Kayıt süresi hesaplayıcı">
+      <article class="card">
+        <div class="card-head"><h2>Sistem bilgileri</h2><p>Değerleri kendi kurulumunuza göre düzenleyin.</p></div>
+        <div class="form">
+          <div class="field-grid">
+            <div class="field"><label for="cameras">Kamera sayısı</label><input id="cameras" type="number" min="1" max="512" step="1" value="8" inputmode="numeric"></div>
+            <div class="field"><label for="resolution">Çözünürlük</label><select id="resolution"><option value="720">720p / 1 MP</option><option value="1080" selected>1080p / 2 MP</option><option value="1440">1440p / 4 MP</option><option value="4mp">4 MP</option><option value="2160">4K / 8 MP</option></select></div>
+            <div class="field"><label for="codec">Video codec</label><select id="codec"><option value="h264">H.264</option><option value="h265" selected>H.265 / HEVC</option></select></div>
+            <div class="field"><label for="fps">Kare hızı (FPS)</label><select id="fps"><option value="10">10 FPS</option><option value="15" selected>15 FPS</option><option value="20">20 FPS</option><option value="25">25 FPS</option><option value="30">30 FPS</option></select></div>
+          </div>
+          <div class="field"><label for="scene">Sahne hareket yoğunluğu</label><select id="scene"><option value="0.72">Düşük — sakin alan</option><option value="1" selected>Orta — normal hareket</option><option value="1.35">Yüksek — yoğun hareket</option></select><span class="hint">Hareket yoğunluğu, değişken bit hızlı (VBR) kayıtta tahmini etkiler.</span></div>
+          <label class="checkline"><input id="customBitrateToggle" type="checkbox"> Kamera başına bit hızını kendim gireceğim</label>
+          <div class="inline-extra" id="customBitrateWrap"><div class="field"><label for="bitrate">Kamera başına bit hızı (Mbps)</label><input id="bitrate" type="number" min="0.1" max="100" step="0.1" value="2.0" inputmode="decimal"><span class="hint">Kamera veya kayıt cihazındaki gerçek bit hızı değerini kullanın.</span></div></div>
+          <div class="divider"></div>
+          <div class="field-grid">
+            <div class="field"><label for="disk">Toplam disk kapasitesi (TB)</label><input id="disk" type="number" min="0.1" max="1000" step="0.1" value="4" inputmode="decimal"></div>
+            <div class="field"><label for="usable">Kullanılabilir disk alanı (%)</label><input id="usable" type="number" min="1" max="100" step="1" value="90" inputmode="numeric"><span class="hint">Dosya sistemi ve güvenli boş alan payı için.</span></div>
+            <div class="field"><label for="hours">Günlük kayıt süresi (saat)</label><input id="hours" type="number" min="1" max="24" step="1" value="24" inputmode="numeric"></div>
+            <div class="field"><label for="targetDays">Hedef kayıt süresi (gün)</label><input id="targetDays" type="number" min="1" max="3650" step="1" value="30" inputmode="numeric"></div>
+          </div>
+          <label class="checkline"><input id="audio" type="checkbox"> Her kamerada ses kaydı var (yaklaşık 64 Kbps/kamera)</label>
+          <div class="error" id="error" role="status" aria-live="polite"></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-head"><h2>Tahmini sonuç</h2><p>Hesaplama toplam video bit hızına dayanır.</p></div>
+        <div class="results" aria-live="polite">
+          <div class="metric-primary"><div class="caption">Tahmini saklama süresi</div><div class="big"><strong id="days">—</strong><span>gün</span></div></div>
+          <div class="metric-grid">
+            <div class="metric"><span class="caption">Toplam bit hızı</span><strong id="totalBitrate">—</strong></div>
+            <div class="metric"><span class="caption">Günlük veri</span><strong id="dailyData">—</strong></div>
+            <div class="metric"><span class="caption">Kullanılabilir disk</span><strong id="usableDisk">—</strong></div>
+            <div class="metric"><span class="caption">Kamera başına</span><strong id="perCamera">—</strong></div>
+          </div>
+          <div class="target">
+            <div class="target-row"><div><h3>Hedef süre için gereken disk</h3><p id="targetDescription">—</p></div><div class="target-out" id="requiredDisk">—</div></div>
+          </div>
+          <p class="note">Sonuç tahminidir. Gerçek kayıt süresi kamera yapılandırması, görüntü içeriği, VBR/CBR ayarı, ses ve kayıt cihazının biçimlendirilmiş kapasitesine göre değişir.</p>
+        </div>
+      </article>
+    </section>
+    <section class="details">
+      <h3>Hesaplama yöntemi</h3>
+      <p>Çözünürlük için yaklaşık bir başlangıç bit hızı kullanılır; codec, FPS ve hareket yoğunluğu ile ayarlanır. İsterseniz kameranızın gerçek bit hızını elle girebilirsiniz.</p>
+      <p><strong>Günlük veri (GB) ≈ toplam bit hızı (Mbps) × kayıt saati × 0,45.</strong> Disk kapasitesi üretici gösterimindeki ondalık TB üzerinden hesaplanır.</p>
+    </section>
+    <footer class="foot"><span>CCTV Kayıt Süresi Hesaplayıcı · Açık kaynaklı, bağımsız araç</span><span>Verileriniz cihazınızdan gönderilmez.</span></footer>
+  </main>
+  <script>
+    (() => {
+      const $ = id => document.getElementById(id);
+      const baseBitrate = {"720":1.5,"1080":3,"1440":5,"4mp":6.5,"2160":12};
+      const codecFactor = {h264:1,h265:0.65};
+      const ids = ["cameras","resolution","codec","fps","scene","bitrate","disk","usable","hours","targetDays","audio","customBitrateToggle"];
+      const fmt = (n, max=1) => new Intl.NumberFormat("tr-TR",{maximumFractionDigits:max}).format(n);
+      function update(){
+        const cameras = Number($("cameras").value), diskTB = Number($("disk").value), usablePct = Number($("usable").value), hours = Number($("hours").value), target = Number($("targetDays").value), custom = $("customBitrateToggle").checked;
+        const values = [cameras,diskTB,usablePct,hours,target];
+        const invalid = values.some(v => !Number.isFinite(v) || v <= 0) || cameras > 512 || usablePct > 100 || hours > 24 || (custom && (!Number.isFinite(Number($("bitrate").value)) || Number($("bitrate").value) <= 0));
+        $("customBitrateWrap").classList.toggle("show", custom);
+        if(invalid){$("error").textContent="Lütfen değerleri kontrol edin. Kamera sayısı en fazla 512, kullanılabilir alan en fazla %100 ve günlük kayıt en fazla 24 saat olabilir.";return;}
+        $("error").textContent="";
+        const autoPerCam = baseBitrate[$("resolution").value] * codecFactor[$("codec").value] * (Number($("fps").value)/15) * Number($("scene").value);
+        const perCam = custom ? Number($("bitrate").value) : autoPerCam;
+        const total = cameras * (perCam + ($("audio").checked ? 0.064 : 0));
+        const daily = total * hours * 0.45;
+        const usableGB = diskTB * 1000 * usablePct/100;
+        const days = usableGB / daily;
+        const requiredTB = (daily * target) / (1000 * usablePct/100);
+        $("days").textContent=fmt(days, days < 10 ? 2 : 1);
+        $("totalBitrate").textContent=fmt(total,2)+" Mbps";
+        $("dailyData").textContent=fmt(daily,1)+" GB";
+        $("usableDisk").textContent=fmt(usableGB,0)+" GB";
+        $("perCamera").textContent=fmt(perCam,2)+" Mbps";
+        $("requiredDisk").textContent=fmt(requiredTB,2)+" TB";
+        $("targetDescription").textContent=fmt(target,0)+" gün kayıt ve %"+fmt(usablePct,0)+" kullanılabilir kapasite varsayımıyla.";
+      }
+      ids.forEach(id => $(id).addEventListener("input",update));
+      ids.forEach(id => $(id).addEventListener("change",update));
+      update();
+    })();
+  </script>
+</body>
+</html>
